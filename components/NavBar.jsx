@@ -4,7 +4,6 @@ import React from 'react';
 
 const NavBar = () => {
    const router = useRouter();
-   console.log('pathname ', router.pathname);
    const isActive = (r) => {
       if (r === router.pathname) {
          return ' active';

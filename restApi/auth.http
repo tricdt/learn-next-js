@@ -1,0 +1,37 @@
+@baseUrl = http://localhost:3000/api
+
+# Students
+
+# @name getAllStudents
+GET {{baseUrl}}/students?_page=1&_limit=10&_sort=mark&_order=desc
+
+###
+
+# @name getStudentById
+GET {{baseUrl}}/students/u6V7vww
+
+###
+
+# @name addNewUser
+POST {{baseUrl}}/auth/register 
+Content-Type: application/x-www-form-urlencoded
+ 
+name=Tri Nguyen
+&email=tricdt.arse1@gmail.com
+&password=123456
+&cf_password=123456
+
+###
+
+# @name updateStudent
+PATCH {{baseUrl}}/students/u6V7vww
+Content-Type: "application/json"
+
+{
+  "name": "Michale Test"
+}
+
+###
+
+# @name removeStudent
+DELETE {{baseUrl}}/students/u6V7vww
