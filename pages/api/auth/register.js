@@ -15,7 +15,6 @@ export default async (req, res) => {
 const register = async (req, res) => {
    try {
       const { name, email, password, cf_password } = req.body
-      console.log(req.body)
       const errMsg = valid(name, email, password, cf_password)
       if (errMsg) return res.status(400).json({ err: errMsg })
       const user = await Users.findOne({ email })

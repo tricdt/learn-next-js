@@ -1,16 +1,84 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React from 'react';
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import React, { useContext } from 'react'
+import { DataContext } from '../store/GlobalState'
+import Cookie from 'js-cookie'
 
 const NavBar = () => {
-   const router = useRouter();
+   const { state, dispatch } = useContext(DataContext)
+
+   const router = useRouter()
+   const { auth } = state
+
    const isActive = (r) => {
       if (r === router.pathname) {
-         return ' active';
+         return ' active'
       } else {
-         return '';
+         return ''
       }
-   };
+   }
+
+   const handleLogout = () => {
+      Cookie.remove('refreshToken', { path: 'api/auth/accessToken' })
+      localStorage.removeItem('firstLogin')
+      dispatch({ type: 'AUTH', payload: {} })
+      dispatch({ type: 'NOTIFY', payload: { success: 'Logged out!' } })
+      return router.push('/')
+   }
+
+   const adminRouter = () => {
+      return (
+         <>
+            <Link href="/users">
+               <a className="dropdown-item">Users</a>
+            </Link>
+            <Link href="/create">
+               <a className="dropdown-item">Products</a>
+            </Link>
+            <Link href="/categories">
+               <a className="dropdown-item">Categories</a>
+            </Link>
+         </>
+      )
+   }
+
+   const loggedRouter = () => {
+      return (
+         <li className="nav-item dropdown">
+            <a
+               className="nav-link dropdown-toggle"
+               id="navbarDropdownMenuLink"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false"
+            >
+               <img
+                  src={auth.user.avatar}
+                  alt={auth.user.avatar}
+                  style={{
+                     borderRadius: '50%',
+                     width: '30px',
+                     height: '30px',
+                     transform: 'translateY(-3px)',
+                     marginRight: '3px',
+                  }}
+               />{' '}
+               {auth.user.name}
+            </a>
+            <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+               <Link href="/profile">
+                  <a className="dropdown-item">Profile</a>
+               </Link>
+               {auth.user.role === 'admin' && adminRouter()}
+               <div className="dropdown-divider"></div>
+               <button className="dropdown-item" onClick={handleLogout}>
+                  Logout
+               </button>
+            </div>
+         </li>
+      )
+   }
+
    return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
          <div className="container-fluid">
@@ -59,47 +127,26 @@ const NavBar = () => {
                         </a>
                      </Link>
                   </li>
-                  <li className="nav-item">
-                     <Link href="/signin">
-                        <a className={'nav-link' + isActive('/signin')}>
-                           <i className="fas fa-user" aria-hidden="true"></i>{' '}
-                           Sign in
-                        </a>
-                     </Link>
-                  </li>
+                  {Object.keys(auth).length === 0 ? (
+                     <li className="nav-item">
+                        <Link href="/signin">
+                           <a className={'nav-link' + isActive('/signin')}>
+                              <i className="fas fa-user" aria-hidden="true"></i>{' '}
+                              Sign in
+                           </a>
+                        </Link>
+                     </li>
+                  ) : (
+                     loggedRouter()
+                  )}
                   {/* <li className="nav-item">
                      <a className="nav-link">Pricing</a>
-                  </li> */}
-                  {/* <li className="nav-item dropdown">
-                     <a
-                        className="nav-link dropdown-toggle"
-                        id="navbarDropdownMenuLink"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                     >
-                        Dropdown link
-                     </a>
-                     <ul
-                        className="dropdown-menu"
-                        aria-labelledby="navbarDropdownMenuLink"
-                     >
-                        <li>
-                           <a className="dropdown-item">Action</a>
-                        </li>
-                        <li>
-                           <a className="dropdown-item">Another action</a>
-                        </li>
-                        <li>
-                           <a className="dropdown-item">Something else here</a>
-                        </li>
-                     </ul>
                   </li> */}
                </ul>
             </div>
          </div>
       </nav>
-   );
-};
+   )
+}
 
-export default NavBar;
+export default NavBar

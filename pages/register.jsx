@@ -1,11 +1,15 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import Head from 'next/head'
 import { DataContext } from '../store/GlobalState'
 import valid from '../utils/valid'
 import { postData } from '../utils/fetchData'
+import { useRouter } from 'next/router'
+
 const Register = () => {
+   const router = useRouter()
    const { state, dispatch } = useContext(DataContext)
+   const { auth } = state
    const initialState = {
       name: 'Tri Nguyen',
       email: 'tricdt@gmail.com',
@@ -30,6 +34,9 @@ const Register = () => {
          return dispatch({ type: 'NOTIFY', payload: { error: res.err } })
       return dispatch({ type: 'NOTIFY', payload: { success: res.msg } })
    }
+   useEffect(() => {
+      if (Object.keys(auth).length !== 0) router.push('/')
+   }, [auth])
    return (
       <div>
          <Head>

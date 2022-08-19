@@ -8,10 +8,8 @@ const connectDB = async () => {
    await mongoose.connect(
       'mongodb://localhost:27017/SalaElectronics',
       {
-         useCreateIndex: true,
-         useFindAndModify: false,
-         useNewUrlParser: true,
-         useUnifiedTopology: true,
+         useNewUrlParser: true, // <-- no longer necessary
+         useUnifiedTopology: true, // <-- no longer necessary
       },
       (err) => {
          if (err) throw err

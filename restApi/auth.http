@@ -1,37 +1,27 @@
 @baseUrl = http://localhost:3000/api
 
-# Students
+# AUTH
 
-# @name getAllStudents
-GET {{baseUrl}}/students?_page=1&_limit=10&_sort=mark&_order=desc
-
-###
-
-# @name getStudentById
-GET {{baseUrl}}/students/u6V7vww
-
-###
-
-# @name addNewUser
+# @name register
 POST {{baseUrl}}/auth/register 
 Content-Type: application/x-www-form-urlencoded
  
 name=Tri Nguyen
-&email=tricdt.arse1@gmail.com
+&email=tricdt5.arse1@gmail.com
 &password=123456
 &cf_password=123456
 
 ###
 
-# @name updateStudent
-PATCH {{baseUrl}}/students/u6V7vww
-Content-Type: "application/json"
-
-{
-  "name": "Michale Test"
-}
+# @name login
+POST {{baseUrl}}/auth/login 
+Content-Type: application/x-www-form-urlencoded
+ 
+email=tricdt@gmail.com
+&password=123456
 
 ###
 
-# @name removeStudent
-DELETE {{baseUrl}}/students/u6V7vww
+# @name accessToken
+GET {{baseUrl}}/auth/accessToken
+Cookie: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmU0YTEzNDM5ZmRlMmI3YWU5OWEzOCIsImlhdCI6MTY2MDg3NzM3OCwiZXhwIjoxNjYxNDgyMTc4fQ.4S2EdiQt717sYxHkwF3RCjEvKfB0M5F0Fd4edPkBBOU;
