@@ -8,7 +8,7 @@ const NavBar = () => {
    const { state, dispatch } = useContext(DataContext)
 
    const router = useRouter()
-   const { auth } = state
+   const { auth, cart } = state
 
    const isActive = (r) => {
       if (r === router.pathname) {
@@ -120,7 +120,7 @@ const NavBar = () => {
                                     fontSize: '14px',
                                  }}
                               >
-                                 {/* {cart.length} */}
+                                 {cart.length}
                               </span>
                            </i>
                            Cart
