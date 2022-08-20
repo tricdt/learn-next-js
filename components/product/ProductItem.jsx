@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { DataContext } from '../../store/GlobalState'
 import Link from 'next/link'
+import { addToCart } from '../../store/Actions'
 
 const ProductItem = ({ product, handleCheck }) => {
    const { state, dispatch } = useContext(DataContext)
