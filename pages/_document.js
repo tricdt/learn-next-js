@@ -27,6 +27,9 @@ class MyDocument extends Document {
                   type="text/javascript"
                   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.4.0/mdb.min.js"
                ></script>
+               <script
+                  src={`https://www.paypal.com/sdk/js?client-id=${process.env.PAYPAL_CLIENT_ID}&currency=USD`}
+               ></script>
             </Head>
             <body>
                <Main />

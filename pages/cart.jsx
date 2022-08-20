@@ -4,12 +4,14 @@ import { DataContext } from '../store/GlobalState'
 import CartItem from '../components/CartItem'
 import Link from 'next/link'
 import { getData } from '../utils/fetchData'
+import PaypalBtn from '../components/paypalBtn'
 const Cart = () => {
    const { state, dispatch } = useContext(DataContext)
    const { cart, auth, orders } = state
 
    const [address, setAddress] = useState('')
    const [mobile, setMobile] = useState('')
+   const [payment, setPayment] = useState(false)
 
    const [total, setTotal] = useState(0)
 
@@ -54,7 +56,11 @@ const Cart = () => {
          updateCart()
       }
    }, [callback])
-   const handlePayment = async () => {}
+   const handlePayment = () => {
+      if (!address || !mobile)
+         return dispatch({ type: 'NOTIFY', payload: { error: 'Please add your address and mobile.' } })
+      setPayment(true)
+   }
    if (cart.length === 0) return <img className="img-responsive w-100" src="/empty_cart.jpg" alt="not empty" />
    return (
       <div className="row mx-auto">
@@ -101,12 +107,15 @@ const Cart = () => {
             <h3>
                Total: <span className="text-danger">${total}</span>
             </h3>
-
-            <Link href={auth.user ? '#!' : '/signin'}>
-               <a className="btn btn-dark my-2" onClick={handlePayment}>
-                  Proceed with payment
-               </a>
-            </Link>
+            {payment ? (
+               <PaypalBtn total={total} address={address} mobile={mobile} state={state} dispatch={dispatch} />
+            ) : (
+               <Link href={auth.user ? '#!' : '/signin'}>
+                  <a className="btn btn-dark my-2" onClick={handlePayment}>
+                     Proceed with payment
+                  </a>
+               </Link>
+            )}
          </div>
       </div>
    )
