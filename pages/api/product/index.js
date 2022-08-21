@@ -1,4 +1,6 @@
 import Products from '../../../models/productModel'
+import connectDB from '../../../utils/connectDB'
+connectDB()
 export default async (req, res) => {
    switch (req.method) {
       case 'GET':
