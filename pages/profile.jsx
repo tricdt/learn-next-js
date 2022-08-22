@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Head from 'next/head'
 import { DataContext } from '../store/GlobalState'
 import valid from '../utils/valid'
 import { patchData } from '../utils/fetchData'
+import { imageUpload } from '../utils/imageUpload'
 const Profile = () => {
    const initialState = {
       avatar: '',
@@ -41,6 +42,34 @@ const Profile = () => {
          if (errMsg) return dispatch({ type: 'NOTIFY', payload: { error: errMsg } })
          updatePassword()
       }
+
+      if (name !== auth.user.name || avatar) updateInfor()
+   }
+
+   const updateInfor = async () => {
+      let media
+      console.log({ avatar })
+      dispatch({ type: 'NOTIFY', payload: { loading: true } })
+      if (avatar) media = await imageUpload([avatar])
+      patchData(
+         'user',
+         {
+            name,
+            avatar: avatar ? media[0].url : auth.user.avatar,
+         },
+         auth.token
+      ).then((res) => {
+         if (res.err) return dispatch({ type: 'NOTIFY', payload: { error: res.err } })
+
+         dispatch({
+            type: 'AUTH',
+            payload: {
+               token: auth.token,
+               user: res.user,
+            },
+         })
+         return dispatch({ type: 'NOTIFY', payload: { success: res.msg } })
+      })
    }
 
    const updatePassword = () => {
@@ -50,6 +79,11 @@ const Profile = () => {
          return dispatch({ type: 'NOTIFY', payload: { success: res.msg } })
       })
    }
+
+   useEffect(() => {
+      if (auth.user) setData({ ...data, name: auth.user.name })
+   }, [auth.user])
+
    if (!auth.user) return null
    return (
       <div className="profile_page">
