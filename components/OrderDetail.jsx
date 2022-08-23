@@ -1,7 +1,36 @@
 import Link from 'next/link'
 import PaypalBtn from '../components/PaypalBtn'
+import { updateItem } from '../store/Actions'
+import { patchData } from '../utils/fetchData'
 const OrderDetail = ({ orderDetail, state, dispatch }) => {
    const { auth, orders } = state
+   const handleDelivered = (order) => {
+      dispatch({ type: 'NOTIFY', payload: { loading: true } })
+
+      patchData(`order/delivered/${order._id}`, null, auth.token).then((res) => {
+         if (res.err) return dispatch({ type: 'NOTIFY', payload: { error: res.err } })
+
+         const { paid, dateOfPayment, method, delivered } = res.result
+
+         dispatch(
+            updateItem(
+               orders,
+               order._id,
+               {
+                  ...order,
+                  paid,
+                  dateOfPayment,
+                  method,
+                  delivered,
+               },
+               'ADD_ORDERS'
+            )
+         )
+
+         return dispatch({ type: 'NOTIFY', payload: { success: res.msg } })
+      })
+   }
+
    return (
       <>
          {orderDetail.map((order) => (
@@ -29,7 +58,7 @@ const OrderDetail = ({ orderDetail, state, dispatch }) => {
                         {auth.user.role === 'admin' && !order.delivered && (
                            <button
                               className="btn btn-dark text-uppercase"
-                              //   onClick={() => handleDelivered(order)}
+                              onClick={() => handleDelivered(order)}
                            >
                               Mark as delivered
                            </button>

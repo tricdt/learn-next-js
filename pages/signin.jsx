@@ -7,7 +7,7 @@ import Cookie from 'js-cookie'
 import { useRouter } from 'next/router'
 
 const Signin = () => {
-   const initialState = { email: 'tricdt@gmail.com', password: '123456' }
+   const initialState = { email: 'admin@gmail.com', password: '123456' }
    const [userData, setUserData] = useState(initialState)
    const { email, password } = userData
    const { state, dispatch } = useContext(DataContext)
@@ -23,8 +23,7 @@ const Signin = () => {
       e.preventDefault()
       dispatch({ type: 'NOTIFY', payload: { loading: true } })
       const res = await postData('auth/login', userData)
-      if (res.err)
-         return dispatch({ type: 'NOTIFY', payload: { error: res.err } })
+      if (res.err) return dispatch({ type: 'NOTIFY', payload: { error: res.err } })
       dispatch({ type: 'NOTIFY', payload: { success: res.msg } })
       dispatch({
          type: 'AUTH',
@@ -49,11 +48,7 @@ const Signin = () => {
             <title>Sign in Page</title>
          </Head>
 
-         <form
-            className="mx-auto my-4"
-            style={{ maxWidth: '500px' }}
-            onSubmit={handleSubmit}
-         >
+         <form className="mx-auto my-4" style={{ maxWidth: '500px' }} onSubmit={handleSubmit}>
             <div className="mb-3">
                <label htmlFor="exampleInputEmail1">Email address</label>
                <input
